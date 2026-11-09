@@ -89,7 +89,7 @@ Automatic decisions are made only by a separate worker process that consumes a d
 
 ## 11. Done
 
-You are done when the acceptance suite passes:
+You are done when the acceptance suite passes. Stop there: no extra tests or features.
 
 ```
 cd acceptance && npm install && npx playwright install chromium && npx playwright test

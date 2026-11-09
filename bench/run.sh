@@ -20,13 +20,14 @@ cp "$WORK/AGENTS.md" "$WORK/CLAUDE.md"
 ( cd "$WORK" && git init -q && git add -A && git -c user.name=bench -c user.email=bench@local commit -qm "spec" )
 
 source "$KIT/bench/lib.sh"
+trap 'echo; echo "interrupted: stopping agent and servers"; free_port 3000; kill 0' INT TERM
 source "$KIT/bench/arms.sh"
 OC_SESSION="ses_bench$(echo "$ARM$RUN" | tr -cd "[:alnum:]")$(date +%s)"
 export OC_SESSION EFFORT OPENCODE_BIN ARM CLAUDE_OPUS_MODEL CLAUDE_SONNET_MODEL OC_FLASH_MODEL OC_OPUS_MODEL
 export -f agent_start agent_resume _claude _opencode
 cd "$WORK"
 
-PROMPT="Build the application described in SPEC.md. Follow AGENTS.md. Work without asking questions until the acceptance suite passes."
+PROMPT="Build the application described in SPEC.md. Follow AGENTS.md. Work without asking questions. Stop as soon as the acceptance suite passes. Do not add tests or features beyond the spec."
 et() { TZ=America/New_York date '+%H:%M ET'; }
 # Prints a progress line every minute while an agent turn runs.
 heartbeat() { # $1 turn start epoch, $2 log prefix

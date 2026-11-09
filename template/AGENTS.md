@@ -7,4 +7,5 @@ Build the application described in `SPEC.md` in this repository.
 - Use the required stack in SPEC.md section 1.
 - You are done when this passes from the repo root:
   `cd acceptance && npm install && npx playwright install chromium && npx playwright test`
+- Stop as soon as the acceptance suite passes. Do not write extra tests, add features beyond the spec, or polish further. Speed counts.
 - Leave port 3000 free when you finish. Stop any server you started.
