@@ -18,7 +18,7 @@ _claude() { # $1 model, $2 prompt, $3 extra flag
 # some other session from V2's shared background service. --auto approves permissions.
 OPENCODE_BIN="${OPENCODE_BIN:-opencode2}"
 _opencode() { # $1 model, $2 prompt, $3 ignored (same session id continues the run)
-  "$OPENCODE_BIN" run --session "$OC_SESSION" -m "$1#$EFFORT" --auto --archived "$2"
+  "$OPENCODE_BIN" run --session "$OC_SESSION" -m "$1#$EFFORT" --format json --auto --archived "$2"
 }
 
 agent_start() {

@@ -95,14 +95,13 @@ if $green; then
   read -r hold_pass hold_fail < <(node "$KIT/bench/report.mjs" counts "$OUT/holdout.json")
 fi
 
-# Claude Code's JSON output carries cost; opencode's does not, so it is left null here.
-cost=$(cat "$OUT"/agent-*.out 2>/dev/null | grep -o '"total_cost_usd":[0-9.]*' | cut -d: -f2 | paste -sd+ - | bc 2>/dev/null || true)
+cost=$(node "$KIT/bench/cost.mjs" "$OUT")
 
 cat >"$OUT/result.json" <<EOF
 {"arm":"$ARM","run":"$RUN","status":"$status","rounds":$round,
  "agent_seconds":$agent_s,"wall_seconds":$wall_s,
  "visible_passed":$vis_pass,"visible_failed":$vis_fail,
  "holdout_passed":$hold_pass,"holdout_failed":$hold_fail,
- "cost_usd":${cost:-null},"effort":"$EFFORT","started":"$started_iso"}
+ "cost_usd":$cost,"effort":"$EFFORT","started":"$started_iso"}
 EOF
 cat "$OUT/result.json"
