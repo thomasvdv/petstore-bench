@@ -11,7 +11,7 @@ OC_OPUS_MODEL="${OC_OPUS_MODEL:-anthropic/claude-opus-5-5}"
 EFFORT="${EFFORT:-max}"
 
 _claude() { # $1 model, $2 prompt, $3 extra flag
-  claude -p "$2" $3 --model "$1" --effort "$EFFORT" --dangerously-skip-permissions --output-format json
+  claude -p "$2" $3 --model "$1" --effort "$EFFORT" --dangerously-skip-permissions --output-format stream-json --verbose
 }
 # opencode V2 (installed as opencode2). Effort goes in the model name: provider/model#variant.
 # Start and resume use the same explicit session id, so a resume can never pick up
