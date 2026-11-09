@@ -1,0 +1,5 @@
+node_modules/
+judge/
+runs/
+results/
+.DS_Store
