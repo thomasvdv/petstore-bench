@@ -27,6 +27,17 @@ export -f agent_start agent_resume _claude _opencode
 cd "$WORK"
 
 PROMPT="Build the application described in SPEC.md. Follow AGENTS.md. Work without asking questions until the acceptance suite passes."
+et() { TZ=America/New_York date '+%H:%M ET'; }
+# Prints a progress line every minute while an agent turn runs.
+heartbeat() { # $1 turn start epoch, $2 log prefix
+  while sleep 60; do
+    local changed
+    changed=$(git -C "$WORK" status --porcelain 2>/dev/null | grep -vc node_modules)
+    echo "  $(et) $ARM/$RUN turn $round: $(( ($(date +%s) - $1) / 60 )) min, $changed paths changed, log $(wc -c <"$2.out" | tr -d ' ') bytes"
+  done
+}
+
+echo "$(et) $ARM/$RUN starting. Workdir: $WORK  Logs: $OUT"
 agent_s=0; round=0; green=false; status="dnf"
 wall_start=$(date +%s); started_iso=$(now_iso)
 
@@ -36,6 +47,8 @@ while :; do
   [ "$left" -le 0 ] && { status="dnf-time"; break; }
 
   t0=$(date +%s)
+  echo "$(et) turn $round: agent working (progress every minute; tail -f $OUT/agent-$round.out)"
+  heartbeat "$t0" "$OUT/agent-$round" & HB=$!
   if [ "$round" -eq 1 ]; then
     with_timeout "$left" bash -c 'agent_start "$1"' _ "$PROMPT" \
       >"$OUT/agent-$round.out" 2>"$OUT/agent-$round.err" </dev/null
@@ -44,7 +57,9 @@ while :; do
       >"$OUT/agent-$round.out" 2>"$OUT/agent-$round.err" </dev/null
   fi
   agent_rc=$?
+  kill "$HB" 2>/dev/null; wait "$HB" 2>/dev/null
   turn_s=$(( $(date +%s) - t0 ))
+  echo "$(et) turn $round: agent stopped after $((turn_s / 60)) min (exit $agent_rc). Judging."
   agent_s=$((agent_s + turn_s))
 
   # An agent that errors out within seconds is a harness problem, not a slow agent. Stop.
@@ -58,11 +73,12 @@ while :; do
   # Judge with the pristine visible suite. Install deps first in case the agent left them stale.
   ( cd "$WORK" && npm install --no-audit --no-fund >"$OUT/install-$round.log" 2>&1 )
   if "$KIT/bench/judge.sh" visible "$WORK" "$OUT/visible-$round.json"; then
-    green=true; status="green"; break
+    green=true; status="green"; echo "$(et) visible suite GREEN"; break
   fi
   is_timeout_rc "$agent_rc" && { status="dnf-time"; break; }
   [ "$round" -ge "$MAX_ROUNDS" ] && { status="dnf-rounds"; break; }
 
+  echo "$(et) visible suite failed: $(node "$KIT/bench/report.mjs" counts "$OUT/visible-$round.json" | awk '{print $1" passed, "$2" failed"}'). Sending feedback."
   FEEDBACK="An independent judge ran the untouched acceptance suite against your app and it failed. Fix the app (not the tests) and keep going until the suite passes.
 
 $(node "$KIT/bench/report.mjs" failures "$OUT/visible-$round.json")"
@@ -73,6 +89,7 @@ read -r vis_pass vis_fail < <(node "$KIT/bench/report.mjs" counts "$OUT/visible-
 
 hold_pass=0; hold_fail=0
 if $green; then
+  echo "$(et) scoring holdout suite"
   "$KIT/bench/judge.sh" holdout "$WORK" "$OUT/holdout.json"
   read -r hold_pass hold_fail < <(node "$KIT/bench/report.mjs" counts "$OUT/holdout.json")
 fi
