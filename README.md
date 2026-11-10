@@ -2,10 +2,14 @@
 
 This benchmark measures how fast each agent arm builds the same app from the same spec, judged by tests the agent can't tamper with.
 
-## Layout
+## Tasks
 
-- `template/` is copied into a fresh git repo for every run. It holds `SPEC.md`, `AGENTS.md` (also copied to `CLAUDE.md`), `seed/catalog.json`, the visible suite in `acceptance/`, and `opencode.json`, which pre-grants permissions.
-- `holdout/` has 16 tests the agents never see. They cover the same spec through different paths: edge cases, concurrency, deny flow and privacy.
+Each task lives in `tasks/<name>/`. `template/` is copied into a fresh git repo for every run: `SPEC.md`, `AGENTS.md` (also copied to `CLAUDE.md`), `seed/`, the visible suite in `acceptance/`, and `opencode.json`. `holdout/` holds the tests the agents never see. Pick a task with `TASK=<name>`; the default is `petstore`.
+
+- `petstore`: catalog, search, cart, accounts, checkout, async approval. 11 visible, 16 holdout.
+- `petstore-v2`: the same store plus stock reservations that expire, coupons with per-line rounding, tax by state, shipping, cancellation, idempotent checkout, order event history, and partial refunds that split a fixed discount across lines. 16 visible, 13 holdout. Every expected amount in its tests was recomputed from the spec's rules.
+
+Runs, results and judges are kept per task: `runs/<task>/`, `results/<task>/`, `judge/<task>/`.
 - `bench/` has the harness:
   - `setup.sh` builds the judge and warms the npm cache. Run it once.
   - `run.sh ARM RUN_ID` does one timed run.
@@ -26,10 +30,10 @@ The headline metric is `agent_seconds`: the sum of the agent's turn times up to 
 ## Run on teachpilot-build
 
 ```
-bench/setup.sh
-bench/run.sh claude-opus calib        # calibration run first, see below
-bench/schedule.sh 3 claude-opus opencode-flash opencode-opus
-node bench/summarize.mjs
+bench/setup.sh                                  # builds judges for every task
+TASK=petstore-v2 bench/run.sh claude-opus calib # calibrate first, see below
+TASK=petstore-v2 caffeinate -is bench/schedule.sh 3 claude-opus opencode-opus opencode-flash
+node bench/summarize.mjs petstore-v2            # leaves out calib runs
 ```
 
 Arms: `claude-opus`, `claude-sonnet`, `opencode-flash`, `opencode-opus`.

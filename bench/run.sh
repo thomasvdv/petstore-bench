@@ -10,12 +10,15 @@ ARM="$1"; RUN="$2"
 KIT="$(cd "$(dirname "$0")/.." && pwd)"
 CAP_SECONDS="${CAP_SECONDS:-7200}"   # 2 hours of agent time
 MAX_ROUNDS="${MAX_ROUNDS:-6}"         # first turn + up to 5 feedback turns
-WORK="${WORK_ROOT:-$KIT/runs}/$ARM-$RUN"
-OUT="$KIT/results/$ARM-$RUN"
-[ -d "$KIT/judge" ] || { echo "run bench/setup.sh first" >&2; exit 2; }
+TASK="${TASK:-petstore}"; export TASK
+TD="$KIT/tasks/$TASK"
+[ -d "$TD/template" ] || { echo "no task $TASK in $KIT/tasks" >&2; exit 2; }
+WORK="${WORK_ROOT:-$KIT/runs}/$TASK/$ARM-$RUN"
+OUT="$KIT/results/$TASK/$ARM-$RUN"
+[ -d "$KIT/judge/$TASK" ] || { echo "run bench/setup.sh $TASK first" >&2; exit 2; }
 
 rm -rf "$WORK" "$OUT"; mkdir -p "$WORK" "$OUT"
-cp -r "$KIT/template/." "$WORK/"
+cp -r "$TD/template/." "$WORK/"
 cp "$WORK/AGENTS.md" "$WORK/CLAUDE.md"
 ( cd "$WORK" && git init -q && git add -A && git -c user.name=bench -c user.email=bench@local commit -qm "spec" )
 
@@ -38,7 +41,7 @@ heartbeat() { # $1 turn start epoch, $2 log prefix
   done
 }
 
-echo "$(et) $ARM/$RUN starting. Workdir: $WORK  Logs: $OUT"
+echo "$(et) $TASK $ARM/$RUN starting. Workdir: $WORK  Logs: $OUT"
 agent_s=0; round=0; green=false; status="dnf"
 wall_start=$(date +%s); started_iso=$(now_iso)
 
@@ -98,7 +101,7 @@ fi
 cost=$(node "$KIT/bench/cost.mjs" "$OUT")
 
 cat >"$OUT/result.json" <<EOF
-{"arm":"$ARM","run":"$RUN","status":"$status","rounds":$round,
+{"task":"$TASK","arm":"$ARM","run":"$RUN","status":"$status","rounds":$round,
  "agent_seconds":$agent_s,"wall_seconds":$wall_s,
  "visible_passed":$vis_pass,"visible_failed":$vis_fail,
  "holdout_passed":$hold_pass,"holdout_failed":$hold_fail,

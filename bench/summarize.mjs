@@ -1,14 +1,17 @@
-// node summarize.mjs  -> per-arm table from results/*/result.json
+// node summarize.mjs [TASK]  -> per-arm table from results/TASK/*/result.json (default petstore).
+// Calibration runs (run id starting with "calib") are left out.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'results');
+const task = process.argv[2] ?? 'petstore';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'results', task);
 const rows = fs.existsSync(root)
   ? fs.readdirSync(root)
       .map((d) => path.join(root, d, 'result.json'))
       .filter((f) => fs.existsSync(f))
       .map((f) => JSON.parse(fs.readFileSync(f, 'utf8')))
+      .filter((r) => !String(r.run).startsWith('calib'))
   : [];
 
 const median = (xs) => {
@@ -20,6 +23,7 @@ const median = (xs) => {
 const mins = (s) => (s == null ? '-' : (s / 60).toFixed(1));
 
 const arms = [...new Set(rows.map((r) => r.arm))].sort();
+console.log(`task: ${task}\n`);
 console.log('arm              runs  green  median_min  best_min  med_rounds  holdout_pass  med_cost');
 for (const arm of arms) {
   const rs = rows.filter((r) => r.arm === arm);

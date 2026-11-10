@@ -1,0 +1,8 @@
+{
+  "coupons": [
+    { "code": "PET10", "kind": "percent", "percent": 10, "categoryId": null, "minSubtotal": 0, "oncePerUser": false, "validUntil": "2099-12-31" },
+    { "code": "FISH20", "kind": "percent", "percent": 20, "categoryId": "FISH", "minSubtotal": 0, "oncePerUser": false, "validUntil": "2099-12-31" },
+    { "code": "BIG50", "kind": "fixed", "amount": 50.0, "categoryId": null, "minSubtotal": 300.0, "oncePerUser": true, "validUntil": "2099-12-31" },
+    { "code": "EXPIRED5", "kind": "percent", "percent": 5, "categoryId": null, "minSubtotal": 0, "oncePerUser": false, "validUntil": "2020-01-01" }
+  ]
+}
