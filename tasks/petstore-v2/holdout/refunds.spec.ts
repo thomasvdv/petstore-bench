@@ -98,6 +98,50 @@ test('refunded units go back to stock', async ({ page }) => {
   await expect(tid(page, 'item-stock')).toHaveText('Only 1 left');
 });
 
+test('fixed coupon tie-break puts the remainder on the smaller item id', async ({ page }) => {
+  await registerOk(page, newUser());
+  await addToCart(page, 'EST-1');
+  await addToCart(page, 'EST-2');
+  await addToCart(page, 'EST-6');
+  await page.goto('/cart');
+  await setQty(page, 'EST-1', 20); // $330.00
+  await expect(tid(page, 'cart-subtotal')).toHaveText('$352.00');
+  await setQty(page, 'EST-2', 20); // $330.00
+  await expect(tid(page, 'cart-subtotal')).toHaveText('$665.50');
+  await setQty(page, 'EST-6', 60); // $330.00
+  await expect(tid(page, 'cart-subtotal')).toHaveText('$990.00');
+
+  await applyCoupon(page, 'BIG50');
+  await expect(tid(page, 'cart-discount')).toHaveText('$50.00');
+
+  await openCheckout(page);
+  await expect(tid(page, 'checkout-total')).toHaveText('$998.75');
+  const id = await placeOrder(page);
+
+  await asAdmin(page);
+  await page.goto('/admin');
+  await tid(page, `admin-approve-${id}`).click();
+  await expectStatus(page, id, 'APPROVED');
+
+  // Three equal $330 lines. EST-2 and EST-6 each get round(5000 * 33000 / 99000)
+  // = 1667c; EST-1, the smaller item id, gets the remainder 1666c. Refunding all
+  // 20 EST-1 units exposes the 1c allocation: net 31334c + tax 1958c = $332.92.
+  // If the remainder went to EST-6 instead, EST-1 would net 31333c and refund
+  // $332.91, so this assertion catches the tie-break.
+  await refund(page, id, { 'EST-1': 20 });
+  await expectStatus(page, id, 'PARTIALLY_REFUNDED');
+  await expect(tid(page, 'order-refunded')).toHaveText('$332.92');
+
+  // One of 60 EST-6 units: net 31333 / 60 -> 522c, tax 33c, refund $5.55.
+  await refund(page, id, { 'EST-6': 1 });
+  await expectStatus(page, id, 'PARTIALLY_REFUNDED');
+  await expect(tid(page, 'order-refunded')).toHaveText('$338.47');
+  expect(await events(page)).toEqual(['PLACED', 'APPROVED', 'REFUNDED', 'REFUNDED']);
+
+  await page.goto(`/admin/orders/${id}`);
+  await expect(tid(page, 'refund-remaining-EST-6')).toHaveText('59');
+});
+
 test('refund pages are admin only, orders are private', async ({ browser, page }) => {
   await registerOk(page, newUser('own'));
   await addToCart(page, 'EST-1');

@@ -1,0 +1,24 @@
+{
+  "giftcards": [
+    {
+      "code": "GIFT50",
+      "balance": 61.5
+    },
+    {
+      "code": "GIFT200",
+      "balance": 175.0
+    },
+    {
+      "code": "GIFT5",
+      "balance": 8.75
+    },
+    {
+      "code": "GIFTODD",
+      "balance": 111.11
+    },
+    {
+      "code": "GIFTZERO",
+      "balance": 0.0
+    }
+  ]
+}

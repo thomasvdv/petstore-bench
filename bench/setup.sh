@@ -14,6 +14,10 @@ for T in "${TASKS[@]}"; do
      "$TD/template/acceptance/helpers.ts" "$J/"
   cp -r "$TD/template/acceptance/tests" "$J/visible"
   cp -r "$TD/holdout" "$J/holdout"
+  if [ -d "$TD/hidden" ]; then
+    rm -rf "$J/hidden"
+    cp -R "$TD/hidden" "$J/hidden"
+  fi
   ( cd "$J"
     npm install --no-audit --no-fund
     npx playwright install --with-deps chromium

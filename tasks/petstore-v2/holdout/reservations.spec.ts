@@ -4,7 +4,7 @@ import {
 } from '../helpers';
 
 test('an undecided order expires and releases its reservation', async ({ page, request }) => {
-  await reset(request, 6);
+  await reset(request, 10);
   await registerOk(page, newUser());
   await addToCart(page, 'EST-14'); // $650.00, needs admin
   await openCheckout(page);
@@ -13,7 +13,10 @@ test('an undecided order expires and releases its reservation', async ({ page, r
   await expect(tid(page, 'item-stock')).toHaveText('Only 2 left');
 
   await page.goto(`/orders/${id}`);
-  await expect(tid(page, 'order-status')).toHaveText('EXPIRED', { timeout: 25_000 });
+  await expect(tid(page, 'order-status')).toHaveText('PENDING');
+  await page.waitForTimeout(2_000);
+  await expect(tid(page, 'order-status')).toHaveText('PENDING');
+  await expect(tid(page, 'order-status')).toHaveText('EXPIRED', { timeout: 30_000 });
   expect(await events(page)).toEqual(['PLACED', 'EXPIRED']);
   await page.goto('/item/EST-14');
   await expect(tid(page, 'item-stock')).toHaveText('Only 3 left');
@@ -47,6 +50,36 @@ test('two buyers race for the last unit at checkout', async ({ browser, request 
   expect([await outcome(a.page), await outcome(b.page)].sort()).toEqual(['error', 'order']);
   await a.ctx.close();
   await b.ctx.close();
+});
+
+test('six buyers race for three units', async ({ browser, request }) => {
+  await reset(request);
+  const buyers = await Promise.all(
+    Array.from({ length: 6 }, () => readyToBuy(browser, 'EST-14')),
+  );
+  await Promise.allSettled(buyers.map(({ page }) => page.getByTestId('place-order').click()));
+
+  const outcomes = await Promise.all(
+    buyers.map(async ({ page }) => {
+      await expect
+        .poll(
+          async () => {
+            if (/\/orders\/[^/]+$/.test(page.url())) return 'order';
+            return (await page.getByTestId('checkout-error').isVisible()) ? 'error' : 'waiting';
+          },
+          { timeout: 30_000 },
+        )
+        .not.toBe('waiting');
+      return /\/orders\/[^/]+$/.test(page.url()) ? 'order' : 'error';
+    }),
+  );
+
+  expect(outcomes.filter((o) => o === 'order')).toHaveLength(3);
+  expect(outcomes.filter((o) => o === 'error')).toHaveLength(3);
+
+  await buyers[0].page.goto('/item/EST-14');
+  await expect(tid(buyers[0].page, 'item-stock')).toHaveText('Out of stock');
+  await Promise.all(buyers.map(({ ctx }) => ctx.close()));
 });
 
 test('cart quantity is capped at available stock', async ({ page, request }) => {

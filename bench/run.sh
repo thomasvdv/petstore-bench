@@ -26,8 +26,8 @@ source "$KIT/bench/lib.sh"
 trap 'echo; echo "interrupted: stopping agent and servers"; free_port 3000; kill 0' INT TERM
 source "$KIT/bench/arms.sh"
 OC_SESSION="ses_bench$(echo "$ARM$RUN" | tr -cd "[:alnum:]")$(date +%s)"
-export OC_SESSION EFFORT OPENCODE_BIN ARM CLAUDE_OPUS_MODEL CLAUDE_SONNET_MODEL OC_FLASH_MODEL OC_OPUS_MODEL
-export -f agent_start agent_resume _claude _opencode
+export OC_SESSION EFFORT OPENCODE_BIN ARM CLAUDE_OPUS_MODEL CLAUDE_SONNET_MODEL CLAUDE_HAIKU_MODEL OC_FLASH_MODEL OC_GLM_MODEL
+export -f agent_start agent_resume arm_model _claude _opencode
 cd "$WORK"
 
 PROMPT="Build the application described in SPEC.md. Follow AGENTS.md. Work without asking questions. Stop as soon as the acceptance suite passes. Do not add tests or features beyond the spec."
@@ -99,9 +99,10 @@ if $green; then
 fi
 
 cost=$(node "$KIT/bench/cost.mjs" "$OUT")
+model=$(arm_model)
 
 cat >"$OUT/result.json" <<EOF
-{"task":"$TASK","arm":"$ARM","run":"$RUN","status":"$status","rounds":$round,
+{"task":"$TASK","arm":"$ARM","run":"$RUN","status":"$status","rounds":$round,"model":"$model",
  "agent_seconds":$agent_s,"wall_seconds":$wall_s,
  "visible_passed":$vis_pass,"visible_failed":$vis_fail,
  "holdout_passed":$hold_pass,"holdout_failed":$hold_fail,

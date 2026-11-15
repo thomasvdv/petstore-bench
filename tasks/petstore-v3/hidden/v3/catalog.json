@@ -1,0 +1,297 @@
+{
+  "categories": [
+    {
+      "id": "FISH",
+      "name": "Fish",
+      "description": "Saltwater and freshwater fish"
+    },
+    {
+      "id": "DOGS",
+      "name": "Dogs",
+      "description": "Loyal companions of every size"
+    },
+    {
+      "id": "REPTILES",
+      "name": "Reptiles",
+      "description": "Snakes and lizards"
+    },
+    {
+      "id": "CATS",
+      "name": "Cats",
+      "description": "Short-haired and long-haired cats"
+    },
+    {
+      "id": "BIRDS",
+      "name": "Birds",
+      "description": "Parrots and songbirds"
+    }
+  ],
+  "products": [
+    {
+      "id": "FI-SW-01",
+      "categoryId": "FISH",
+      "name": "Angelfish",
+      "description": "Saltwater fish from Australia"
+    },
+    {
+      "id": "FI-SW-02",
+      "categoryId": "FISH",
+      "name": "Tiger Shark",
+      "description": "Saltwater predator from Australia"
+    },
+    {
+      "id": "FI-FW-01",
+      "categoryId": "FISH",
+      "name": "Koi",
+      "description": "Freshwater pond fish from Japan"
+    },
+    {
+      "id": "FI-FW-02",
+      "categoryId": "FISH",
+      "name": "Goldfish",
+      "description": "Freshwater fish from China"
+    },
+    {
+      "id": "K9-BD-01",
+      "categoryId": "DOGS",
+      "name": "Bulldog",
+      "description": "Friendly dog from England"
+    },
+    {
+      "id": "K9-PO-02",
+      "categoryId": "DOGS",
+      "name": "Poodle",
+      "description": "Cute dog from France"
+    },
+    {
+      "id": "K9-DL-01",
+      "categoryId": "DOGS",
+      "name": "Dalmatian",
+      "description": "Great dog for a fire station"
+    },
+    {
+      "id": "K9-RT-01",
+      "categoryId": "DOGS",
+      "name": "Golden Retriever",
+      "description": "Great family dog"
+    },
+    {
+      "id": "K9-RT-02",
+      "categoryId": "DOGS",
+      "name": "Labrador Retriever",
+      "description": "Great hunting dog"
+    },
+    {
+      "id": "K9-CW-01",
+      "categoryId": "DOGS",
+      "name": "Chihuahua",
+      "description": "Great companion dog"
+    },
+    {
+      "id": "RP-SN-01",
+      "categoryId": "REPTILES",
+      "name": "Rattlesnake",
+      "description": "Doubles as a watch dog"
+    },
+    {
+      "id": "RP-LI-02",
+      "categoryId": "REPTILES",
+      "name": "Iguana",
+      "description": "Friendly green friend"
+    },
+    {
+      "id": "FL-DSH-01",
+      "categoryId": "CATS",
+      "name": "Manx",
+      "description": "Great for reducing mouse populations"
+    },
+    {
+      "id": "FL-DLH-02",
+      "categoryId": "CATS",
+      "name": "Persian",
+      "description": "Friendly house cat, doubles as a princess"
+    },
+    {
+      "id": "AV-CB-01",
+      "categoryId": "BIRDS",
+      "name": "Amazon Parrot",
+      "description": "Great companion for up to 75 years"
+    },
+    {
+      "id": "AV-SB-02",
+      "categoryId": "BIRDS",
+      "name": "Finch",
+      "description": "Great stress reliever"
+    }
+  ],
+  "items": [
+    {
+      "id": "EST-1",
+      "productId": "FI-SW-01",
+      "attribute": "Large",
+      "price": 13.27,
+      "stock": 303
+    },
+    {
+      "id": "EST-2",
+      "productId": "FI-SW-01",
+      "attribute": "Small",
+      "price": 13.27,
+      "stock": 303
+    },
+    {
+      "id": "EST-3",
+      "productId": "FI-SW-02",
+      "attribute": "Toothless",
+      "price": 14.87,
+      "stock": 153
+    },
+    {
+      "id": "EST-4",
+      "productId": "FI-FW-01",
+      "attribute": "Spotted",
+      "price": 14.87,
+      "stock": 123
+    },
+    {
+      "id": "EST-5",
+      "productId": "FI-FW-01",
+      "attribute": "Spotless",
+      "price": 14.87,
+      "stock": 123
+    },
+    {
+      "id": "EST-6",
+      "productId": "FI-FW-02",
+      "attribute": "Adult Male",
+      "price": 4.47,
+      "stock": 603
+    },
+    {
+      "id": "EST-7",
+      "productId": "FI-FW-02",
+      "attribute": "Adult Female",
+      "price": 4.3,
+      "stock": 603
+    },
+    {
+      "id": "EST-8",
+      "productId": "K9-BD-01",
+      "attribute": "Male Adult",
+      "price": 334.87,
+      "stock": 33
+    },
+    {
+      "id": "EST-9",
+      "productId": "K9-BD-01",
+      "attribute": "Female Puppy",
+      "price": 312.06,
+      "stock": 33
+    },
+    {
+      "id": "EST-10",
+      "productId": "K9-PO-02",
+      "attribute": "Male Puppy",
+      "price": 254.87,
+      "stock": 33
+    },
+    {
+      "id": "EST-11",
+      "productId": "K9-DL-01",
+      "attribute": "Spotless Male Puppy",
+      "price": 254.87,
+      "stock": 33
+    },
+    {
+      "id": "EST-12",
+      "productId": "K9-DL-01",
+      "attribute": "Spotted Adult Female",
+      "price": 270.87,
+      "stock": 33
+    },
+    {
+      "id": "EST-13",
+      "productId": "K9-RT-01",
+      "attribute": "Adult Female",
+      "price": 364.47,
+      "stock": 33
+    },
+    {
+      "id": "EST-14",
+      "productId": "K9-RT-02",
+      "attribute": "Adult Male",
+      "price": 520.07,
+      "stock": 12
+    },
+    {
+      "id": "EST-15",
+      "productId": "K9-CW-01",
+      "attribute": "Adult Male",
+      "price": 100.47,
+      "stock": 63
+    },
+    {
+      "id": "EST-16",
+      "productId": "K9-CW-01",
+      "attribute": "Adult Female",
+      "price": 124.3,
+      "stock": 63
+    },
+    {
+      "id": "EST-17",
+      "productId": "RP-SN-01",
+      "attribute": "Venomless",
+      "price": 14.87,
+      "stock": 78
+    },
+    {
+      "id": "EST-18",
+      "productId": "RP-LI-02",
+      "attribute": "Green Adult",
+      "price": 14.87,
+      "stock": 78
+    },
+    {
+      "id": "EST-19",
+      "productId": "FL-DSH-01",
+      "attribute": "Tailless",
+      "price": 126.87,
+      "stock": 6
+    },
+    {
+      "id": "EST-20",
+      "productId": "FL-DSH-01",
+      "attribute": "With tail",
+      "price": 126.87,
+      "stock": 48
+    },
+    {
+      "id": "EST-21",
+      "productId": "FL-DLH-02",
+      "attribute": "Adult Female",
+      "price": 1000.07,
+      "stock": 18
+    },
+    {
+      "id": "EST-22",
+      "productId": "FL-DLH-02",
+      "attribute": "Adult Male",
+      "price": 748.47,
+      "stock": 18
+    },
+    {
+      "id": "EST-23",
+      "productId": "AV-CB-01",
+      "attribute": "Adult Male",
+      "price": 154.87,
+      "stock": 27
+    },
+    {
+      "id": "EST-24",
+      "productId": "AV-SB-02",
+      "attribute": "Adult Male",
+      "price": 12.47,
+      "stock": 3
+    }
+  ]
+}

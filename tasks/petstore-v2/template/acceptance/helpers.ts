@@ -95,6 +95,8 @@ export async function applyCoupon(page: Page, code: string) {
   await page.goto('/cart');
   await tid(page, 'coupon-input').fill(code);
   await tid(page, 'coupon-apply').click();
+  // Wait for the server's answer: either the applied coupon or the error.
+  await expect(tid(page, 'coupon-applied').or(tid(page, 'coupon-error'))).toBeVisible();
 }
 
 /** Opens checkout and fills a valid card. Optionally sets the ship state. */

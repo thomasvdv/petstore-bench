@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# schedule.sh N ARM...   e.g. TASK=petstore-v2 schedule.sh 3 claude-opus opencode-flash opencode-opus
+# schedule.sh N ARM...   e.g. TASK=petstore-v2 schedule.sh 3 claude-opus claude-sonnet claude-haiku opencode-flash opencode-glm
 # Runs N rounds. Each round runs every arm once, rotating the order so no arm
 # always goes first or always lands in the same time of day.
 set -uo pipefail

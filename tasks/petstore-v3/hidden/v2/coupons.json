@@ -1,0 +1,104 @@
+{
+  "coupons": [
+    {
+      "code": "PET10",
+      "kind": "percent",
+      "percent": 12,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2099-12-31",
+      "groupId": "percent"
+    },
+    {
+      "code": "FISH20",
+      "kind": "percent",
+      "percent": 25,
+      "categoryId": "FISH",
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2099-12-31",
+      "groupId": "percent"
+    },
+    {
+      "code": "BIG50",
+      "kind": "fixed",
+      "amount": 37.0,
+      "categoryId": null,
+      "minSubtotal": 250.0,
+      "oncePerUser": true,
+      "validUntil": "2099-12-31",
+      "groupId": "site"
+    },
+    {
+      "code": "EXPIRED5",
+      "kind": "percent",
+      "percent": 5,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2020-01-01",
+      "groupId": "percent"
+    },
+    {
+      "code": "SAVE15",
+      "kind": "percent",
+      "percent": 18,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2099-12-31",
+      "groupId": "site"
+    },
+    {
+      "code": "FLAT25",
+      "kind": "fixed",
+      "amount": 19.0,
+      "categoryId": null,
+      "minSubtotal": 80.0,
+      "oncePerUser": false,
+      "validUntil": "2099-12-31",
+      "groupId": "site"
+    },
+    {
+      "code": "VIP20",
+      "kind": "percent",
+      "percent": 25,
+      "categoryId": null,
+      "minSubtotal": 150.0,
+      "oncePerUser": true,
+      "validUntil": "2099-12-31",
+      "groupId": "vip"
+    },
+    {
+      "code": "MEGA90",
+      "kind": "percent",
+      "percent": 85,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2099-12-31",
+      "groupId": "mega"
+    },
+    {
+      "code": "SOON5",
+      "kind": "percent",
+      "percent": 5,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2026-01-20",
+      "groupId": "soon"
+    },
+    {
+      "code": "EXPIRING5",
+      "kind": "percent",
+      "percent": 5,
+      "categoryId": null,
+      "minSubtotal": 0,
+      "oncePerUser": false,
+      "validUntil": "2026-01-15",
+      "groupId": "expiring"
+    }
+  ]
+}
